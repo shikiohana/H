@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ChangHong</string>
+    <string name="action_settings">Settings</string>
+    <string name="privacy">隐私条款</string>
+    <string name="register">注册</string>
+    <string name="login">登录</string>
+    <string name="binding">绑定</string>
+    <string name="sex">性别</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="change_data">修改个人资料</string>
+    <string name="change_pass">修改密码</string>
+    <string name="scores">积分查询</string>
+    <string name="person">会员明细</string>
+    <string name="pack">会员包</string>
+    <string name="logout">退出</string>
+</resources>
