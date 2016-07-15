@@ -10,8 +10,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Element;
 import org.xutils.http.HttpTask;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import changhonginterface.ChanghongApiService;
 import model.ChanghongUser;
@@ -150,9 +152,30 @@ public class RegisterActivity extends Activity {
             }
         });*/
 
+        RequestParams params1 = new RequestParams("http://blog.csdn.net/mobile/experts.html");
+       x.http().post(params1, new org.xutils.common.Callback.CommonCallback<ChanghongUser>() {
+           @Override
+           public void onSuccess(ChanghongUser result) {
 
+           }
 
-        Retrofit retrofit=new Retrofit.Builder().baseUrl("http://192.168.1.252:8088/api/").build();
+           @Override
+           public void onError(Throwable ex, boolean isOnCallback) {
+
+           }
+
+           @Override
+           public void onCancelled(CancelledException cex) {
+
+           }
+
+           @Override
+           public void onFinished() {
+
+           }
+       });
+
+        /*Retrofit retrofit=new Retrofit.Builder().baseUrl("http://192.168.1.252:8088/api/").build();
         ChanghongApiService service=retrofit.create(ChanghongApiService.class);
         ChanghongUser user=new ChanghongUser();
 
@@ -172,10 +195,11 @@ public class RegisterActivity extends Activity {
             public void onFailure(Throwable t) {
                 Toast.makeText(RegisterActivity.this,"失败",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     public String getT(EditText editText){
         return userName.getText().toString();
+
     }
 }
