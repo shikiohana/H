@@ -1,6 +1,7 @@
 package com.example.administrator.changhong;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,13 +11,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.xutils.http.HttpTask;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import changhonginterface.ChanghongApiService;
 import model.ChanghongUser;
+import model.HttpUtils;
+import model.MyUtils;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -114,7 +124,7 @@ public class RegisterActivity extends Activity {
      */
     private void registerForSex(String sex){
 
-        RequestParams params = new RequestParams();
+        RequestParams params = new RequestParams("http://apis.baidu.com/apistore/weatherservice/cityname");
         params.addHeader("name", "value");
         params.addQueryStringParameter("name", "value");
 
@@ -152,16 +162,34 @@ public class RegisterActivity extends Activity {
             }
         });*/
 
-        RequestParams params1 = new RequestParams("http://blog.csdn.net/mobile/experts.html");
-       x.http().post(params1, new org.xutils.common.Callback.CommonCallback<ChanghongUser>() {
+        RequestParams params1 = new RequestParams("http://apis.baidu.com/apistore/weatherservice/cityname");
+        HashMap<String,String > map=new HashMap<String, String>();
+        map.put("MTel", getT(phone));
+        map.put("Gender", sex);
+        map.put("CNName", getT(userName));
+        map.put("pwd", getT(pass));
+        map.put("openID", "shikiohana");
+       MyTask task=new MyTask();
+        task.execute(map);
+// 只包含字符串参数时默认使用BodyParamsEntity，
+// 类似于UrlEncodedFormEntity（"application/x-www-form-urlencoded"）。
+        params1.addBodyParameter("name", "value");
+        params1.addBodyParameter("MTel", getT(phone));
+        params1.addBodyParameter("Gender", sex);
+        params1.addBodyParameter("CNName", getT(userName));
+        params1.addBodyParameter("pwd", getT(pass));
+        params1.addBodyParameter("openID","shikiohana");
+       x.http().get(params, new org.xutils.common.Callback.CommonCallback<ChanghongUser>() {
            @Override
            public void onSuccess(ChanghongUser result) {
-
+                Log.i("result",result.toString());
+               Toast.makeText(RegisterActivity.this, "chenggong", Toast.LENGTH_SHORT).show();
            }
 
            @Override
            public void onError(Throwable ex, boolean isOnCallback) {
-
+               Toast.makeText(RegisterActivity.this, "错误", Toast.LENGTH_SHORT).show();
+               Log.i("Error",ex.toString());
            }
 
            @Override
@@ -199,7 +227,49 @@ public class RegisterActivity extends Activity {
     }
 
     public String getT(EditText editText){
-        return userName.getText().toString();
+        return editText.getText().toString();
 
+    }
+
+    class MyTask extends AsyncTask<HashMap<String,String> ,Void,String>{
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(RegisterActivity.this,s, Toast.LENGTH_SHORT).show();
+            Log.i("result",s);
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(HashMap<String,String>... strings) {
+            HttpUtils utils=new HttpUtils();
+            String json = maptoString(strings[0]);
+          //  String str=utils.postJsonData("http://apis.baidu.com/apistore/weatherservice/cityname",json);
+           String str=utils.postJsonData("http:///192.168.1.252:8088/api/reg",json);
+
+            //String str=utils.submitPostData("http://192.168.1.252:8088/api/reg",strings[0],"UTF_8");
+            return str;
+        }
+    };
+
+
+
+    private String maptoString(HashMap<String,String> map){
+        JSONObject jsonObject=new JSONObject();
+        Set<String> set=map.keySet();
+        for(String key : set){
+            try {
+                jsonObject.put(key,map.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+
+
+        Log.i("json",jsonObject.toString());
+        return jsonObject.toString();
     }
 }
