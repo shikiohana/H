@@ -2,7 +2,6 @@ package com.example.administrator.changhong;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -10,16 +9,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Element;
-import org.xutils.http.HttpTask;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import changhonginterface.ChanghongApiService;
 import model.ChanghongUser;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Created by Administrator on 2016/7/12.
@@ -110,96 +103,21 @@ public class RegisterActivity extends Activity {
 
     /**
      * 注册
+     * 125.86.59.3
      * @param sex  性别
      */
     private void registerForSex(String sex){
 
-        RequestParams params = new RequestParams();
-        params.addHeader("name", "value");
-        params.addQueryStringParameter("name", "value");
-
-// 只包含字符串参数时默认使用BodyParamsEntity，
-// 类似于UrlEncodedFormEntity（"application/x-www-form-urlencoded"）。
-        params.addBodyParameter("name", "value");
-
-// 加入文件参数后默认使用MultipartEntity（"multipart/form-data"），
-// 如需"multipart/related"，xUtils中提供的MultipartEntity支持设置subType为"related"。
-// 使用params.setBodyEntity(httpEntity)可设置更多类型的HttpEntity（如：
-// MultipartEntity,BodyParamsEntity,FileUploadEntity,InputStreamUploadEntity,StringEntity）。
-// 例如发送json参数：params.setBodyEntity(new StringEntity(jsonStr,charset));
-     //   params.addBodyParameter("file", new File("path"));
 
 
-      /*  HttpTask http = new HttpTask(params, null, new org.xutils.common.Callback.CommonCallback() {
-            @Override
-            public void onSuccess(Object result) {
 
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });*/
-
-        RequestParams params1 = new RequestParams("http://blog.csdn.net/mobile/experts.html");
-       x.http().post(params1, new org.xutils.common.Callback.CommonCallback<ChanghongUser>() {
-           @Override
-           public void onSuccess(ChanghongUser result) {
-
-           }
-
-           @Override
-           public void onError(Throwable ex, boolean isOnCallback) {
-
-           }
-
-           @Override
-           public void onCancelled(CancelledException cex) {
-
-           }
-
-           @Override
-           public void onFinished() {
-
-           }
-       });
-
-        /*Retrofit retrofit=new Retrofit.Builder().baseUrl("http://192.168.1.252:8088/api/").build();
-        ChanghongApiService service=retrofit.create(ChanghongApiService.class);
-        ChanghongUser user=new ChanghongUser();
-
-        user.setCnName(getT(userName));
-        user.setGender(sex);
-        user.setmTel(getT(phone));
-        user.setPwd(getT(pass));
-        user.setOpenId("111111");
-        service.creatUser(user, new Callback<ChanghongUser>() {
-            @Override
-            public void onResponse(Response<ChanghongUser> response, Retrofit retrofit) {
-                Log.i("Onrepse", response.toString());
-                Toast.makeText(RegisterActivity.this,"成功",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Toast.makeText(RegisterActivity.this,"失败",Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     public String getT(EditText editText){
         return userName.getText().toString();
 
     }
+
+
+
 }

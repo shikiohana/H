@@ -2,6 +2,7 @@ package com.example.administrator.changhong;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends Activity {
     ImageView back,personal;
@@ -58,12 +70,100 @@ public class MainActivity extends Activity {
                 case R.id.binding://绑定
                     break;
                 case R.id.register://注册
-                    Intent intent=new Intent(MainActivity.this,RegisterActivity.class);
-                    startActivity(intent);
+                    MyTask task=new MyTask();
+                    task.execute("");
+                    uxtilsRequest();
+                   /* Intent intent=new Intent(MainActivity.this,RegisterActivity.class);
+                    startActivity(intent);*/
                     break;
                default:
                    break;
         }
     }
     };
+
+    class MyTask extends AsyncTask<String,Void,String>{
+        @Override
+        protected void onPostExecute(String s) {
+            binding.setText(s);
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String str=request(httpUrl,httpArg);
+            return str;
+        }
+    }
+
+
+    String httpUrl = "http://apis.baidu.com/apistore/weatherservice/cityname";
+    String httpArg = "cityname=%E5%8C%97%E4%BA%AC";
+    String jsonResult = request(httpUrl, httpArg);
+
+
+    /**
+     * @param
+     *            :请求接口
+     * @param httpArg
+     *            :参数
+     * @return 返回结果
+     */
+    public static String request(String httpUrl, String httpArg) {
+        BufferedReader reader = null;
+        String result = null;
+        StringBuffer sbf = new StringBuffer();
+        httpUrl = httpUrl + "?" + httpArg;
+
+        try {
+            URL url = new URL(httpUrl);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setRequestMethod("GET");
+            // 填入apikey到HTTP header
+            connection.setRequestProperty("apikey",  "801c5e1aca87ed2ba21840465887ae68");
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String strRead = null;
+            while ((strRead = reader.readLine()) != null) {
+                sbf.append(strRead);
+                sbf.append("\r\n");
+            }
+            reader.close();
+            result = sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    private void uxtilsRequest(){
+        RequestParams params=new RequestParams("http://apis.baidu.com/apistore/weatherservice/cityname?cityname=%E5%8C%97%E4%BA%AC");
+        params.setHeader("apikey",  "801c5e1aca87ed2ba21840465887ae68");
+
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                privacy.setText(result);
+                Toast.makeText(MainActivity.this, "成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
 }
